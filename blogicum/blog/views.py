@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from django.http import HttpResponseNotFound
+
 
 posts = [
     {
@@ -50,10 +52,12 @@ def index(request):
     return render(request, template_name, context)
 
 
-def post_detail(request, id):
+def post_detail(request, pk):
     template_name = 'blog/detail.html'
-    context = {'post': posts[id]}
-    return render(request, template_name, context)
+    for post in posts:
+        if post['id'] == pk:
+            return render(request, template_name, {'post': post})
+    return HttpResponseNotFound("<h1>Page not found</h1>")
 
 
 def category_posts(request, category_slug):
